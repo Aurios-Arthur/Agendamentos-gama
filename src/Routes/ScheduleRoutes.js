@@ -9,7 +9,7 @@ router.use(auth);
 // Listar todos os agendamentos
 router.get("/", async (req, res) => {
     try {
-        const schedules = await Schedule.find();
+        const schedules = await Schedule.find({ empresaId: req.userId }); // Filtra por empresaId
         res.json(schedules);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -24,6 +24,7 @@ router.post("/", async (req, res) => {
     try {
         const newSchedule = new Schedule({
             empresa,
+            empresaId: req.userId, // Associa o agendamento ao ID do usuário logado
             nome,
             dataNasc,
             dataAgn,
