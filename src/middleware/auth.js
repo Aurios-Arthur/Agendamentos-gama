@@ -8,10 +8,13 @@ module.exports = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, "seuSegredoJWT");
-        req.userId = decoded.userId; // Adiciona o ID do usuário à requisição
+        console.log("Token recebido:", token); // Log do token recebido
+        const decoded = jwt.verify(token.replace("Bearer ", ""), "seuSegredoJWT");
+        console.log("Token decodificado:", decoded); // Log do token decodificado
+        req.userId = decoded.userId;
         next();
     } catch (err) {
+        console.error("Erro ao verificar token:", err); // Log do erro
         res.status(400).json({ message: "Token inválido." });
     }
 };

@@ -2,6 +2,7 @@ const express = require("express");
 const ScheduleRoutes = require("./Routes/ScheduleRoutes"); // Importando o arquivo de rotas
 const connectDB = require("../database");
 const AuthRoutes = require("./Routes/AuthRoutes");
+const cors = require("cors");
 
 class App {
     constructor() {
@@ -18,6 +19,7 @@ class App {
 
 
     middleware() {
+        this.server.use(cors());
         this.server.use(express.json());
     }
 
