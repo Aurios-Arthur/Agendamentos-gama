@@ -1,6 +1,7 @@
 const express = require("express");
 const ScheduleRoutes = require("./Routes/ScheduleRoutes"); // Importando o arquivo de rotas
 const connectDB = require("../database");
+const AuthRoutes = require("./Routes/AuthRoutes");
 
 class App {
     constructor() {
@@ -21,8 +22,8 @@ class App {
     }
 
     routes() {
-        // Usando a função routes importada
-        ScheduleRoutes(this.server);
+        this.server.use("/auth", AuthRoutes); // Rotas de autenticação
+        this.server.use("/schedules", ScheduleRoutes); // Rotas de agendamento
     }
 }
 

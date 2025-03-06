@@ -1,4 +1,33 @@
 const Schedule = require("../models/Schedule"); // Caminho corrigido
+const express = require("express");
+const auth = require("../middleware/auth");
+
+const router = express.Router();
+
+router.use(auth);
+
+// Listar todos os agendamentos
+router.get("/", async (req, res) => {
+    try {
+        const schedules = await Schedule.find();
+        res.json(schedules);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Criar um novo agendamento
+router.post("/", async (req, res) => {
+    const { empresa, nome, dataNasc, dataAgn, CPF, sexo, setor, cargo, matriculaEsocial } = req.body;
+
+    try {
+        const newSchedule = new Schedule({ empresa, nome, dataNasc, dataAgn, CPF, sexo, setor, cargo, matriculaEsocial });
+        const savedSchedule = await newSchedule.save();
+        res.status(201).json(savedSchedule);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
 
 module.exports = (server) => {
     // Listar todos os agendamentos
@@ -67,3 +96,5 @@ module.exports = (server) => {
         }
     });
 };
+
+module.exports = router;
