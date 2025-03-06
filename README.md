@@ -11,6 +11,9 @@ redirecionamento para pagina de agendamentos
 usuario deve receber uma confirmação via e-mail ou wpp 
 
 
+token adm: $2b$10$BZ/N5Y3a5aFZN4qU45w7yOTkkeeYvNE8De6pRR3awjL9nOs8Xoumy
+senha: G@m@2025
+
 Dependencias utilizadas: 
 express(); 
 nodemon();

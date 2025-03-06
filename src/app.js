@@ -1,22 +1,21 @@
 const express = require("express");
-const ScheduleRoutes = require("./Routes/ScheduleRoutes"); // Importando o arquivo de rotas
-const connectDB = require("../database");
-const AuthRoutes = require("./Routes/AuthRoutes");
 const cors = require("cors");
+const connectDB = require("../database");
+const AuthRoutes = require("./routes/AuthRoutes");
+const ScheduleRoutes = require("./routes/ScheduleRoutes");
+const AdminRoutes = require("./Routes/AdminRoutes"); // Importe as rotas de administração
 
 class App {
     constructor() {
         this.server = express();
+        this.database();
         this.middleware();
         this.routes();
-        this.database();
     }
-
 
     database() {
         connectDB();
-    }   
-
+    }
 
     middleware() {
         this.server.use(cors());
@@ -24,8 +23,9 @@ class App {
     }
 
     routes() {
-        this.server.use("/auth", AuthRoutes); // Rotas de autenticação
-        this.server.use("/schedules", ScheduleRoutes); // Rotas de agendamento
+        this.server.use("/auth", AuthRoutes);
+        this.server.use("/schedules", ScheduleRoutes);
+        this.server.use("/admin", AdminRoutes); // Use as rotas de administração
     }
 }
 

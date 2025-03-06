@@ -107,7 +107,8 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
     const setor = document.getElementById("setor").value;
     const cargo = document.getElementById("cargo").value;
     const matriculaEsocial = document.getElementById("matriculaEsocial").value;
-    const exames = Array.from(document.getElementById("exames").selectedOptions).map(option => option.value);
+
+    console.log("Dados enviados:", { empresa, nome, dataNasc, dataAgn, cpf, sexo, setor, cargo, matriculaEsocial }); // Log dos dados
 
     try {
         const response = await fetch(`${API_URL}/schedules`, {
@@ -126,7 +127,6 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
                 setor,
                 cargo,
                 matriculaEsocial,
-                exames,
             }),
         });
 
@@ -175,3 +175,285 @@ if (window.location.pathname.endsWith("agendamentos.html")) {
         loadSchedules();
     }
 }
+
+// Função para carregar exames
+async function loadExames() {
+    try {
+        const response = await fetch(`${API_URL}/admin/exames`, {
+            headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        const exames = await response.json();
+        const examesList = document.getElementById("exames-list"); // ID "exames-list"
+        const examesSelect = document.getElementById("exames-select"); // ID "exames-select"
+
+        examesList.innerHTML = exames.map(exame => `
+            <li>${exame.nome}</li>
+        `).join("");
+
+        examesSelect.innerHTML = exames.map(exame => `
+            <option value="${exame._id}">${exame.nome}</option>
+        `).join("");
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar exames.");
+    }
+}
+
+// Função para carregar empresas
+async function loadEmpresas() {
+    try {
+        const response = await fetch(`${API_URL}/admin/empresas`, {
+            headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao carregar empresas.");
+        }
+
+        const empresas = await response.json();
+        const empresaSelect = document.getElementById("empresa-select");
+
+        empresaSelect.innerHTML = empresas.map(empresa => `
+            <option value="${empresa._id}">${empresa.nomeEmpresa}</option>
+        `).join("");
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar empresas.");
+    }
+}
+
+// Criar novo exame
+document.getElementById("create-exame")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nome = document.getElementById("exame-nome").value;
+
+    try {
+        const response = await fetch(`${API_URL}/admin/exames`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ nome }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert("Exame criado com sucesso!");
+            loadExames();
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        alert("Erro ao criar exame.");
+    }
+});
+
+// Associar exames à empresa
+document.getElementById("assign-exames")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const empresaId = document.getElementById("empresa-select").value;
+    const exames = Array.from(document.getElementById("exames-select").selectedOptions).map(option => option.value);
+
+    try {
+        const response = await fetch(`${API_URL}/admin/empresas/${empresaId}/exames`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ exames }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert("Exames associados com sucesso!");
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        alert("Erro ao associar exames.");
+    }
+});
+
+// Carregar exames e empresas ao abrir a página
+if (window.location.pathname.endsWith("admin.html")) {
+    if (!token) {
+        window.location.href = "index.html";
+    } else {
+        loadExames();
+        loadEmpresas();
+    }
+}
+
+// Função para carregar setores
+async function loadSetores(empresaId) {
+    try {
+        const response = await fetch(`${API_URL}/admin/empresas/${empresaId}/setores`, {
+            headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        const setores = await response.json();
+        const setoresList = document.getElementById("setores-list");
+        const setorSelect = document.getElementById("setor-select");
+        const setorSelectExames = document.getElementById("setor-select-exames");
+
+        setoresList.innerHTML = setores.map(setor => `
+            <li>${setor.nome} - Cargos: ${setor.cargos.join(", ")}</li>
+        `).join("");
+
+        setorSelect.innerHTML = setores.map(setor => `
+            <option value="${setor._id}">${setor.nome}</option>
+        `).join("");
+
+        setorSelectExames.innerHTML = setores.map(setor => `
+            <option value="${setor._id}">${setor.nome}</option>
+        `).join("");
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar setores.");
+    }
+}
+
+// Criar novo setor
+document.getElementById("create-setor")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const empresaId = document.getElementById("empresa-select").value;
+    const nome = document.getElementById("setor-nome").value;
+
+    try {
+        const response = await fetch(`${API_URL}/admin/setores`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ nome, empresaId }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert("Setor criado com sucesso!");
+            loadSetores(empresaId);
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        alert("Erro ao criar setor.");
+    }
+});
+// Adicionar cargo a um setor
+document.getElementById("add-cargos")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const setorId = document.getElementById("setor-select").value;
+    const cargo = document.getElementById("cargo-nome").value;
+
+    try {
+        const response = await fetch(`${API_URL}/admin/setores/${setorId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ cargos: [cargo] }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert("Cargo adicionado com sucesso!");
+            loadSetores(data.empresaId);
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        alert("Erro ao adicionar cargo.");
+    }
+});
+
+// Função para carregar setores e cargos da empresa logada
+async function loadSetoresECargos() {
+    try {
+        // Carrega os dados do usuário logado
+        const userResponse = await fetch(`${API_URL}/auth/me`, {
+            headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        if (!userResponse.ok) {
+            throw new Error("Erro ao carregar dados do usuário.");
+        }
+
+        const user = await userResponse.json();
+
+        // Carrega os setores da empresa logada
+        const setoresResponse = await fetch(`${API_URL}/admin/empresas/${user._id}/setores`, {
+            headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        if (!setoresResponse.ok) {
+            throw new Error("Erro ao carregar setores.");
+        }
+
+        const setores = await setoresResponse.json();
+        const setorSelect = document.getElementById("setor");
+        const cargoSelect = document.getElementById("cargo");
+
+        // Preenche a lista de setores
+        setorSelect.innerHTML = setores.map(setor => `
+            <option value="${setor._id}">${setor.nome}</option>
+        `).join("");
+
+        // Atualiza a lista de cargos quando um setor é selecionado
+        setorSelect.addEventListener("change", (e) => {
+            const setorId = e.target.value;
+            const setorSelecionado = setores.find(setor => setor._id === setorId);
+
+            if (setorSelecionado) {
+                cargoSelect.innerHTML = setorSelecionado.cargos.map(cargo => `
+                    <option value="${cargo}">${cargo}</option>
+                `).join("");
+            } else {
+                cargoSelect.innerHTML = ""; // Limpa a lista de cargos se nenhum setor for selecionado
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar setores e cargos.");
+    }
+}
+
+// Carregar setores e cargos ao abrir a página de agendamentos
+if (window.location.pathname.endsWith("agendamentos.html")) {
+    if (!token) {
+        window.location.href = "index.html";
+    } else {
+        loadSetoresECargos(); // Carrega setores e cargos
+    }
+}
+
+// Atribuir exames a um setor
+document.getElementById("assign-exames")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const setorId = document.getElementById("setor-select-exames").value;
+    const exames = Array.from(document.getElementById("exames-select").selectedOptions).map(option => option.value);
+
+    try {
+        const response = await fetch(`${API_URL}/admin/setores/${setorId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ exames }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert("Exames atribuídos com sucesso!");
+        } else {
+            alert(data.message);
+        }
+    } catch (err) {
+        alert("Erro ao atribuir exames.");
+    }
+});

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gerenciar Setores, Cargos e Exames</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciar Setores, Cargos e Exames</h1>
+        <button id="logout">Sair</button>
+
+        <!-- Criar Novo Exame -->
+        <h2>Criar Novo Exame</h2>
+        <form id="create-exame">
+            <input type="text" id="exame-nome" placeholder="Nome do Exame" required>
+            <button type="submit">Criar Exame</button>
+        </form>
+
+        <!-- Lista de Exames -->
+        <h2>Lista de Exames</h2>
+        <ul id="exames-list"></ul>
+
+        <!-- Criar Novo Setor -->
+        <h2>Criar Novo Setor</h2>
+        <form id="create-setor">
+            <select id="empresa-select"></select>
+            <input type="text" id="setor-nome" placeholder="Nome do Setor" required>
+            <button type="submit">Criar Setor</button>
+        </form>
+
+        <!-- Lista de Setores -->
+        <h2>Lista de Setores</h2>
+        <ul id="setores-list"></ul>
+
+        <!-- Adicionar Cargos a um Setor -->
+        <h2>Adicionar Cargos a um Setor</h2>
+        <form id="add-cargos">
+            <select id="setor-select"></select>
+            <input type="text" id="cargo-nome" placeholder="Nome do Cargo" required>
+            <button type="submit">Adicionar Cargo</button>
+        </form>
+
+        <!-- Atribuir Exames a um Setor -->
+        <h2>Atribuir Exames a um Setor</h2>
+        <form id="assign-exames">
+            <select id="setor-select-exames"></select>
+            <select id="exames-select" multiple></select>
+            <button type="submit">Atribuir Exames</button>
+        </form>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
