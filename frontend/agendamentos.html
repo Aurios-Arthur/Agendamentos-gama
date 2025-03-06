@@ -12,7 +12,7 @@
         <button id="logout">Sair</button>
         <h2>Criar Novo Agendamento</h2>
         <form id="create-schedule">
-            <input type="text" id="empresa" placeholder="Empresa" required>
+            <input type="hidden" id="empresa" value="">
             <input type="text" id="nome" placeholder="Nome" required>
             <input type="date" id="dataNasc" required>
             <input type="datetime-local" id="dataAgn" required>
@@ -21,6 +21,11 @@
             <input type="text" id="setor" placeholder="Setor" required>
             <input type="text" id="cargo" placeholder="Cargo" required>
             <input type="text" id="matriculaEsocial" placeholder="Matrícula eSocial" required>
+            <select id="exames" multiple>
+                <option value="Exame 1">Exame 1</option>
+                <option value="Exame 2">Exame 2</option>
+                <option value="Exame 3">Exame 3</option>
+            </select>
             <button type="submit">Criar Agendamento</button>
         </form>
         <h2>Lista de Agendamentos</h2>

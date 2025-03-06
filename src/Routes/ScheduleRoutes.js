@@ -17,11 +17,24 @@ router.get("/", async (req, res) => {
 });
 
 // Criar um novo agendamento
+// Criar um novo agendamento
 router.post("/", async (req, res) => {
-    const { empresa, nome, dataNasc, dataAgn, CPF, sexo, setor, cargo, matriculaEsocial } = req.body;
+    const { empresa, nome, dataNasc, dataAgn, CPF, sexo, setor, cargo, matriculaEsocial, exames } = req.body;
 
     try {
-        const newSchedule = new Schedule({ empresa, nome, dataNasc, dataAgn, CPF, sexo, setor, cargo, matriculaEsocial });
+        const newSchedule = new Schedule({
+            empresa,
+            nome,
+            dataNasc,
+            dataAgn,
+            CPF,
+            sexo,
+            setor,
+            cargo,
+            matriculaEsocial,
+            exames,
+        });
+
         const savedSchedule = await newSchedule.save();
         res.status(201).json(savedSchedule);
     } catch (err) {

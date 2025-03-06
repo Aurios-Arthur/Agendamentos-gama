@@ -2,19 +2,10 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs"); // Para criptografar a senha
 
 const UserSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        required: true,
-        unique: true, // Garante que cada email seja único
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    nomeEmpresa: { type: String, required: true }, // Novo campo
+    createdAt: { type: Date, default: Date.now },
 });
 
 // Criptografa a senha antes de salvar o usuário

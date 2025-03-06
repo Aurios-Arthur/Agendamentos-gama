@@ -20,12 +20,13 @@ document.getElementById("register")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const email = document.getElementById("register-email").value;
     const password = document.getElementById("register-password").value;
+    const nomeEmpresa = document.getElementById("register-nome-empresa").value; // Novo campo
 
     try {
         const response = await fetch(`${API_URL}/auth/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, password, nomeEmpresa }), // Enviando nomeEmpresa
         });
 
         const data = await response.json();
@@ -66,6 +67,28 @@ document.getElementById("login")?.addEventListener("submit", async (e) => {
     }
 });
 
+async function loadUserData() {
+    try {
+        const response = await fetch(`${API_URL}/auth/me`, {
+            headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao carregar dados do usuário.");
+        }
+
+        const user = await response.json();
+        console.log("Dados do usuário:", user); // Log dos dados do usuário
+
+        // Preenche o campo "empresa"
+        document.getElementById("empresa").value = user.nomeEmpresa;
+        console.log("Campo empresa preenchido com:", user.nomeEmpresa); // Log do valor do campo
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar dados do usuário.");
+    }
+}
+
 // Logout
 document.getElementById("logout")?.addEventListener("click", () => {
     localStorage.removeItem("token");
@@ -84,6 +107,7 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
     const setor = document.getElementById("setor").value;
     const cargo = document.getElementById("cargo").value;
     const matriculaEsocial = document.getElementById("matriculaEsocial").value;
+    const exames = Array.from(document.getElementById("exames").selectedOptions).map(option => option.value);
 
     try {
         const response = await fetch(`${API_URL}/schedules`, {
@@ -92,7 +116,18 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`,
             },
-            body: JSON.stringify({ empresa, nome, dataNasc, dataAgn, CPF: cpf, sexo, setor, cargo, matriculaEsocial }),
+            body: JSON.stringify({
+                empresa,
+                nome,
+                dataNasc,
+                dataAgn,
+                CPF: cpf,
+                sexo,
+                setor,
+                cargo,
+                matriculaEsocial,
+                exames,
+            }),
         });
 
         const data = await response.json();
@@ -106,6 +141,7 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
         alert("Erro ao criar agendamento.");
     }
 });
+
 
 // Listar agendamentos
 async function loadSchedules() {
@@ -135,6 +171,7 @@ if (window.location.pathname.endsWith("agendamentos.html")) {
     if (!token) {
         window.location.href = "index.html";
     } else {
+        loadUserData(); // Carrega os dados do usuário
         loadSchedules();
     }
 }
