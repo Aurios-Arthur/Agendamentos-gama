@@ -10,15 +10,21 @@ body {
 }
 
 .container {
+    display: flex;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: center;
+    width: 90%;
+    max-width: 1200px;
 }
 
-h1, h2 {
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h2 {
     margin-bottom: 20px;
 }
 
@@ -35,11 +41,13 @@ input {
 }
 
 button {
+    width: 100%;
     padding: 10px;
     background-color: #28a745;
     color: #fff;
     border: none;
     border-radius: 4px;
+    font-size: 16px;
     cursor: pointer;
 }
 
@@ -63,4 +71,39 @@ a:hover {
 
 #logout:hover {
     background-color: #c82333;
+}
+
+#calendar {
+    width: 100%;
+    height: 600px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-container {
+    width: 30%;
+    padding-right: 20px;
+    border-right: 1px solid #ccc;
+}
+
+.calendar-container {
+    width: 70%;
+    padding-left: 20px;
 }

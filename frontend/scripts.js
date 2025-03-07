@@ -107,10 +107,10 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
     const sexo = document.getElementById("sexo").value;
     const setor = document.getElementById("setor").value;
     const cargo = document.getElementById("cargo").value;
-    const tipoExame = document.getElementById("tipoExame").value; // Novo campo
+    const tipoExame = document.getElementById("tipoExame").value;
     const matriculaEsocial = document.getElementById("matriculaEsocial").value;
 
-    console.log("Dados enviados:", { empresa, nome, dataNasc, dataAgn, cpf, sexo, setor, cargo, tipoExame, matriculaEsocial }); // Log dos dados
+    console.log("Dados enviados:", { empresa, nome, dataNasc, dataAgn, cpf, sexo, setor, cargo, tipoExame, matriculaEsocial });
 
     try {
         const response = await fetch(`${API_URL}/schedules`, {
@@ -128,7 +128,7 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
                 sexo,
                 setor,
                 cargo,
-                tipoExame, // Novo campo
+                tipoExame,
                 matriculaEsocial,
             }),
         });
@@ -144,7 +144,6 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
         alert("Erro ao criar agendamento.");
     }
 });
-
 
 // Listar agendamentos
 async function loadSchedules() {
@@ -458,5 +457,64 @@ document.getElementById("assign-exames")?.addEventListener("submit", async (e) =
         }
     } catch (err) {
         alert("Erro ao atribuir exames.");
+    }
+});
+
+// Iniciar Calendario 
+document.addEventListener("DOMContentLoaded", () => {
+    // Inicializa o calendário
+    const calendarEl = document.getElementById("calendar");
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth", // Visualização inicial (mês)
+        headerToolbar: {
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek,timeGridDay",
+        },
+        events: [], // Eventos serão carregados dinamicamente
+        editable: true, // Permite arrastar e redimensionar eventos
+        selectable: true, // Permite selecionar intervalos de tempo
+        dateClick: (info) => {
+            // Exibe a data clicada no console
+            console.log("Data clicada:", info.dateStr);
+        },
+        eventClick: (info) => {
+            // Exibe detalhes do evento clicado
+            alert(`Evento: ${info.event.title}\nData: ${info.event.start}`);
+        },
+    });
+
+    calendar.render();
+
+    // Carrega os agendamentos no calendário
+    async function loadAgendamentos() {
+        try {
+            const response = await fetch(`${API_URL}/schedules`, {
+                headers: { "Authorization": `Bearer ${token}` },
+            });
+
+            const agendamentos = await response.json();
+            calendar.removeAllEvents(); // Remove eventos antigos
+
+            // Adiciona os agendamentos ao calendário
+            agendamentos.forEach(agendamento => {
+                calendar.addEvent({
+                    title: `${agendamento.nome} - ${agendamento.tipoExame}`,
+                    start: agendamento.dataAgn,
+                });
+            });
+        } catch (err) {
+            console.error(err);
+            alert("Erro ao carregar agendamentos.");
+        }
+    }
+
+    // Carrega os agendamentos ao abrir a página
+    if (window.location.pathname.endsWith("agendamentos.html")) {
+        if (!token) {
+            window.location.href = "index.html";
+        } else {
+            loadAgendamentos();
+        }
     }
 });

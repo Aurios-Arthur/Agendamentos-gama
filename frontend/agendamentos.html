@@ -5,43 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agendamentos</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- FullCalendar CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>Agendamentos</h1>
-        <button id="logout">Sair</button>
+        <!-- Formulário à esquerda -->
+        <div class="form-container">
+            <h1>Agendamentos</h1>
+            <button id="logout">Sair</button>
 
-        <h2>Criar Novo Agendamento</h2>
-        <form id="create-schedule">
-            <input type="hidden" id="empresa" value="">
-            <input type="text" id="nome" placeholder="Nome" required>
-            <input type="date" id="dataNasc" required>
-            <input type="datetime-local" id="dataAgn" required>
-            <input type="text" id="cpf" placeholder="CPF" required>
-            <select id="sexo" required>
-                <option value="Masculino">Masculino</option>
-                <option value="Feminino">Feminino</option>
-            </select>
-            <select id="setor" required>
-                <!-- Opções de setor serão preenchidas dinamicamente -->
-            </select>
-            <select id="cargo" required>
-                <!-- Opções de cargo serão preenchidas dinamicamente -->
-            </select>
-            <select id="tipoExame" required>
-                <option value="Admissional">Admissional</option>
-                <option value="Periodico">Periódico</option>
-                <option value="Demissional">Demissional</option>
-                <option value="Retorno ao trabalho">Retorno ao trabalho</option>
-                <option value="Mudança de risco">Mudança de risco</option>
-            </select>
-            <input type="text" id="matriculaEsocial" placeholder="Matrícula eSocial" required>
-            <button type="submit">Criar Agendamento</button>
-        </form>
+            <h2>Criar Novo Agendamento</h2>
+            <form id="create-schedule">
+                <input type="hidden" id="empresa" value="">
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" placeholder="Digite o nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="dataNasc">Data de Nascimento:</label>
+                    <input type="date" id="dataNasc" required>
+                </div>
+                <div class="form-group">
+                    <label for="dataAgn">Data do Agendamento:</label>
+                    <input type="datetime-local" id="dataAgn" required>
+                </div>
+                <div class="form-group">
+                    <label for="cpf">CPF:</label>
+                    <input type="text" id="cpf" placeholder="Digite o CPF" required>
+                </div>
+                <div class="form-group">
+                    <label for="sexo">Sexo:</label>
+                    <select id="sexo" required>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Feminino">Feminino</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="setor">Setor:</label>
+                    <select id="setor" required>
+                        <!-- Opções de setor serão preenchidas dinamicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cargo">Cargo:</label>
+                    <select id="cargo" required>
+                        <!-- Opções de cargo serão preenchidas dinamicamente -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tipoExame">Tipo de Exame:</label>
+                    <select id="tipoExame" required>
+                        <option value="Admissional">Admissional</option>
+                        <option value="Periodico">Periódico</option>
+                        <option value="Demissional">Demissional</option>
+                        <option value="Retorno ao trabalho">Retorno ao trabalho</option>
+                        <option value="Mudança de risco">Mudança de risco</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="matriculaEsocial">Matrícula eSocial:</label>
+                    <input type="text" id="matriculaEsocial" placeholder="Digite a matrícula eSocial" required>
+                </div>
+                <button type="submit">Criar Agendamento</button>
+            </form>
+        </div>
 
-        <h2>Lista de Agendamentos</h2>
-        <ul id="schedules-list"></ul>
+        <!-- Calendário à direita -->
+        <div class="calendar-container">
+            <div id="calendar"></div>
+        </div>
     </div>
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="scripts.js"></script>
 </body>
 </html>
