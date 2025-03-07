@@ -17,14 +17,13 @@ router.get("/", async (req, res) => {
 });
 
 // Criar um novo agendamento
-// Criar um novo agendamento
 router.post("/", async (req, res) => {
-    const { empresa, nome, dataNasc, dataAgn, CPF, sexo, setor, cargo, matriculaEsocial, exames } = req.body;
+    const { empresa, nome, dataNasc, dataAgn, CPF, sexo, setor, cargo, tipoExame, matriculaEsocial } = req.body;
 
     try {
         const newSchedule = new Schedule({
             empresa,
-            empresaId: req.userId, // Associa o agendamento ao ID do usuário logado
+            empresaId: req.userId,
             nome,
             dataNasc,
             dataAgn,
@@ -32,8 +31,8 @@ router.post("/", async (req, res) => {
             sexo,
             setor,
             cargo,
+            tipoExame, // Novo campo
             matriculaEsocial,
-            exames,
         });
 
         const savedSchedule = await newSchedule.save();

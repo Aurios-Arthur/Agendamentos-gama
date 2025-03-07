@@ -98,6 +98,7 @@ document.getElementById("logout")?.addEventListener("click", () => {
 // Criar um novo agendamento
 document.getElementById("create-schedule")?.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const empresa = document.getElementById("empresa").value;
     const nome = document.getElementById("nome").value;
     const dataNasc = document.getElementById("dataNasc").value;
@@ -106,9 +107,10 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
     const sexo = document.getElementById("sexo").value;
     const setor = document.getElementById("setor").value;
     const cargo = document.getElementById("cargo").value;
+    const tipoExame = document.getElementById("tipoExame").value; // Novo campo
     const matriculaEsocial = document.getElementById("matriculaEsocial").value;
 
-    console.log("Dados enviados:", { empresa, nome, dataNasc, dataAgn, cpf, sexo, setor, cargo, matriculaEsocial }); // Log dos dados
+    console.log("Dados enviados:", { empresa, nome, dataNasc, dataAgn, cpf, sexo, setor, cargo, tipoExame, matriculaEsocial }); // Log dos dados
 
     try {
         const response = await fetch(`${API_URL}/schedules`, {
@@ -126,6 +128,7 @@ document.getElementById("create-schedule")?.addEventListener("submit", async (e)
                 sexo,
                 setor,
                 cargo,
+                tipoExame, // Novo campo
                 matriculaEsocial,
             }),
         });
